@@ -1,0 +1,17 @@
+service: youtube-backend 
+
+provider:
+  name: aws
+  runtime: nodejs8.10
+  profile: youtube
+  region: us-east-1 
+  role: arn:aws:iam::885121665536:role/youtube-polly-actual-role
+      
+functions:
+  speak:
+    handler: handler.speak
+    events:
+      - http: 
+          path: speak
+          method: post
+          cors: true
