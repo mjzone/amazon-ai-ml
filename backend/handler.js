@@ -1,7 +1,39 @@
 let AWS = require("aws-sdk");
 let polly = new AWS.Polly();
+let comprehend = new AWS.Comprehend();
 let s3 = new AWS.S3();
 const uuidv1 = require('uuid/v1');
+
+module.exports.analyze = (event, context, callback) => {
+  let data = JSON.parse(event.body);
+
+  const comprehendParams = {
+    LanguageCode: data.language,
+    Text: data.text
+  };
+  comprehend.detectSentiment(comprehendParams, function (err, data) {
+    if (err) {
+      callback(null, {
+        statusCode: 400,
+        headers: {
+          "Access-Control-Allow-Origin": "*"
+        },
+        body: JSON.stringify(err)
+      });
+    } else {
+      let result = {
+        response: data
+      };
+      callback(null, {
+        statusCode: 200,
+        headers: {
+          "Access-Control-Allow-Origin": "*"
+        },
+        body: JSON.stringify(result)
+      });
+    }
+  });
+}
 
 module.exports.speak = (event, context, callback) => {
   let data = JSON.parse(event.body);
@@ -17,7 +49,7 @@ module.exports.speak = (event, context, callback) => {
       let data = response.data;
       let audioStream = data.AudioStream;
       let key = uuidv1();
-      let s3BucketName = 'youtube-polly-mp3';  
+      let s3BucketName = 'youtube-polly-mp3';
 
       // 2. Saving the audio stream to S3
       let params = {
@@ -48,7 +80,7 @@ module.exports.speak = (event, context, callback) => {
           callback(null, {
             statusCode: 200,
             headers: {
-              "Access-Control-Allow-Origin" : "*"
+              "Access-Control-Allow-Origin": "*"
             },
             body: JSON.stringify(result)
           });
@@ -62,7 +94,7 @@ module.exports.speak = (event, context, callback) => {
       callback(null, {
         statusCode: 500,
         headers: {
-          "Access-Control-Allow-Origin" : "*"
+          "Access-Control-Allow-Origin": "*"
         },
         body: JSON.stringify(err)
       });

@@ -10,6 +10,7 @@ import { APIService }  from './api.service'
 export class AppComponent {  
   voices = ["Matthew", "Joanna", "Ivy", "Justin"];
   selectedVoice = "Mattew";
+  sentiment = null;
    
   constructor(private api: APIService){}
 
@@ -27,6 +28,16 @@ export class AppComponent {
     }
     this.api.speak(data).subscribe((result:any) => {
       this.playAudio(result.url);
+    });
+  }
+
+  analyze(input){
+    let data = {
+      text: input,
+      language: 'en'
+    }
+    this.api.analyze(data).subscribe((result:any) => {
+      this.sentiment = result.response.Sentiment;
     });
   }
 }

@@ -15,3 +15,11 @@ functions:
           path: speak
           method: post
           cors: true
+
+  analyze:
+    handler: handler.analyze
+    events:
+      - http: 
+          path: analyze
+          method: post
+          cors: true

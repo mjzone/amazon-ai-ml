@@ -10,5 +10,11 @@
   </div>
   <div style="margin-top: 10px">
     <button style="font-size: 15px;" (click)="speakNow(userInput.value)">Speak Now</button>
+    <button style="font-size: 15px;" (click)="analyze(userInput.value)">Analyze</button>
+  </div>
+  <div>
+    <h2 *ngIf="sentiment=='POSITIVE'" style="color: green;">{{sentiment}}! </h2>
+    <h2 *ngIf="sentiment=='NEUTRAL'" style="color: orange;">{{sentiment}} </h2>
+    <h2 *ngIf="sentiment=='NEGATIVE'" style="color: red;">{{sentiment}}! </h2>
   </div>
 </div>
